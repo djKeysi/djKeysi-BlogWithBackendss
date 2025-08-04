@@ -18,11 +18,10 @@ const MainBlogContainer = ({ className }) => {
 
 	useEffect(() => {
 		request(
-			`http://localhost:3001/posts?search=${searchPhrase}&page=${page}&limit=${PAGINATION_LIMIT}`,
+			`/posts?search=${searchPhrase}&page=${page}&limit=${PAGINATION_LIMIT}`,
 		).then(({ data: { posts, lastPage } }) => {
 			setPost(posts);
-			console.log(post);
-			// console.log(links);
+
 			setLastPage(lastPage);
 		});
 	}, [page, shouldSearch]);

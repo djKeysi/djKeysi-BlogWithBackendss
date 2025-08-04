@@ -6,6 +6,21 @@ import svgr from 'vite-plugin-svgr';
 export default defineConfig({
 	plugins: [react(), svgr()],
 	server: {
-		open: true,
+		//open: true,
+		port: 5173,
+		proxy: {
+			//origin: 'http://localhost:3001',
+			'/register': 'http://localhost:3001',
+			'/posts': 'http://localhost:3001',
+			'/logout': 'http://localhost:3001',
+			'/login': 'http://localhost:3001',
+			'/users': 'http://localhost:3001',
+			// '/api': {
+			// 	target: 'http://localhost:3001',
+			// 	changeOrigin: true,
+			// 	secure: false,
+			// 	rewrite: (path) => path.replace(/^\/api/, ''),
+			// },
+		},
 	},
 });

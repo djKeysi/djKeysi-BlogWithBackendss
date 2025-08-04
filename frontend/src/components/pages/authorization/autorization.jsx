@@ -64,16 +64,14 @@ export const AutorizationContainer = ({ className }) => {
 	useResetForm(reset);
 
 	const onSubmit = ({ login, password }) => {
-		request('http://localhost:3001/login', 'POST', { login, password }).then(
-			({ error, user }) => {
-				if (error) {
-					setServerError(`Ошибка запроса ${error}`);
-					return;
-				}
-				dispatch(setUser(user));
-				sessionStorage.setItem('userData', JSON.stringify(user));
-			},
-		);
+		request('/login', 'POST', { login, password }).then(({ error, user }) => {
+			if (error) {
+				setServerError(`Ошибка запроса ${error}`);
+				return;
+			}
+			dispatch(setUser(user));
+			sessionStorage.setItem('userData', JSON.stringify(user));
+		});
 	};
 	const formError = errors?.login?.message || errors?.password?.message;
 	const errorMessage = formError || serverError;

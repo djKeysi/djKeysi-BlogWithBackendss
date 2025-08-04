@@ -19,18 +19,17 @@ export const UsersContainer = ({ className }) => {
 		if (!checkAccess([ROLE.ADMIN], userRole)) {
 			return;
 		}
-		Promise.all([
-			request('http://localhost:3001/users'),
-			request('http://localhost:3001/users/roles'),
-		]).then(([usersRes, rolesRes]) => {
-			if (usersRes.error || rolesRes.error) {
-				setErrorMessage(usersRes.error || rolesRes.error);
-				return;
-			}
+		Promise.all([request('/users'), request('/users/roles')]).then(
+			([usersRes, rolesRes]) => {
+				if (usersRes.error || rolesRes.error) {
+					setErrorMessage(usersRes.error || rolesRes.error);
+					return;
+				}
 
-			setUsers(usersRes.data);
-			setRoles(rolesRes.data);
-		});
+				setUsers(usersRes.data);
+				setRoles(rolesRes.data);
+			},
+		);
 
 		// requestServer('fetchRoles').then(({ rolesError, res }) => {
 		// 	if (rolesError) return;
@@ -43,7 +42,7 @@ export const UsersContainer = ({ className }) => {
 		if (!checkAccess([ROLE.ADMIN], userRole)) {
 			return;
 		}
-		request(`http://localhost:3001/users/${userId}`, 'DELETE').then(() => {
+		request(`/users/${userId}`, 'DELETE').then(() => {
 			setShouldUpdateUserList(!shouldUpdateUserList);
 		});
 	};

@@ -21,8 +21,6 @@ const CommentsContainer = ({ className, comments, postId }) => {
 	};
 	const isGuest = userRole === ROLE.GUEST;
 
-	console.log(comments);
-
 	return (
 		<div className={className}>
 			{!isGuest && (
