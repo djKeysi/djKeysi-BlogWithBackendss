@@ -1,6 +1,8 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const {
   register,
   login,
@@ -27,14 +29,20 @@ const mapComment = require("./helpers/mapComment");
 const port = 3001;
 
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.static("../frontend/dist")); //для того чтобы билд был доступен на сервере
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, PUT, PATCH, POST, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Methods", "GET, PUT, PATCH, POST, DELETE");
+//   res.header("Access-Control-Allow-Headers", "Content-Type");
+//   next();
+// });
 app.use(cookieParser());
 app.use(express.json());
 
@@ -46,7 +54,6 @@ app.post("/register", async (req, res) => {
     res
       .cookie("token", token, { httpOnly: true })
       .send({ error: null, user: mapUser(user) }); //теперь пользователю ненужно будет заполнять отдельно форму логина и пароля , если он только зарегистрировался
-    console.log(user);
   } catch (e) {
     res.send({ error: e.message || "Unknown error" });
   }
@@ -145,10 +152,8 @@ app.delete("/users/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   res.send({ error: null });
 });
 
-mongoose
-  .connect("mongodb://user:mongopass@localhost:27017/blog?authSource=admin")
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port} `);
-    });
+mongoose.connect(process.env.DB_CONNECTION_STRING).then(() => {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port} `);
   });
+});
